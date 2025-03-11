@@ -1,6 +1,8 @@
 package com.example.practica6_247253
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -18,15 +20,41 @@ class MovieDetail : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        var iv_pelicula_image: ImageView = findViewById(R.id.iv_pelicula_imagen)
-        var tv_nombre_pelicula: TextView = findViewById(R.id.tv_nombre_pelicula)
-        var tv_pelicula_desc: TextView = findViewById(R.id.tv_pelicula_desc)
+        val imgPelicula: ImageView = findViewById(R.id.iv_pelicula_imagen)
+        val txtNombrePelicula: TextView = findViewById(R.id.tv_nombre_pelicula)
+        val txtDescPelicula: TextView = findViewById(R.id.tv_pelicula_desc)
+        val txtSeatLeft: TextView = findViewById(R.id.seatLeft)
+        val btn: Button = findViewById(R.id.buyTickets)
 
-        var bundle=intent.extras
-        if (bundle!=null){
-            iv_pelicula_image.setImageResource(bundle.getInt("header"))
-            tv_nombre_pelicula.setText(bundle.getString("titulo"))
-            tv_pelicula_desc.setText(bundle.getString("sinopsis"))
+        val bundle = intent.extras
+        var ns = 0
+        var id = -1
+        var title = ""
+
+        if (bundle != null){
+            ns = bundle.getInt("numberSeats")
+            title = bundle.getString("titulo")!!
+            imgPelicula.setImageResource(bundle.getInt("image"))
+            txtNombrePelicula.setText(bundle.getString("titulo"))
+            txtDescPelicula.setText(bundle.getString("sinopsis"))
+            txtSeatLeft.setText("$ns seats avaible")
+            id = bundle.getInt("pos")
+
+
+        }
+        if(ns ==0){
+            btn.isActivated = false
+        }
+        else{
+            btn.isActivated = true
+            btn.setOnClickListener{
+                val intent: Intent = Intent(this, seatSelection::class.java)
+
+                intent.putExtra("id", id)
+                intent.putExtra("titulo", title)
+
+                this.startActivity(intent)
+            }
         }
     }
 }
